@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Céline's Adventskalender</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, #1a2347 0%, #2d4875 30%, #4a6fa5 60%, #d4e3f0 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Schneeflocken Animation */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            font-family: Arial;
+            text-shadow: 0 0 5px #fff;
+            animation: fall linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,215,0,0.4);
+            margin-bottom: 10px;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #e8d5c4;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .landscape {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 600px;
+        }
+
+        /* Winterlandschaft Elemente */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, #f5f5f5 0%, #e8eef5 50%, #dce6f0 100%);
+            border-radius: 0;
+            box-shadow: 0 -10px 30px rgba(255,255,255,0.2);
+        }
+
+        .ground::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse 800px 100px at 20% 0%, rgba(255,255,255,0.9) 0%, transparent 50%),
+                radial-gradient(ellipse 600px 80px at 60% 0%, rgba(255,255,255,0.7) 0%, transparent 50%),
+                radial-gradient(ellipse 500px 60px at 90% 0%, rgba(255,255,255,0.8) 0%, transparent 50%);
+        }
+
+        /* Wolken */
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+            opacity: 0.9;
+            filter: drop-shadow(0 5px 10px rgba(255,255,255,0.5));
+        }
+
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 100px;
+            left: 10%;
+            animation: float-cloud 20s ease-in-out infinite;
+        }
+
+        .cloud1::before {
+            content: '';
+            position: absolute;
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            top: -25px;
+            left: 10px;
+        }
+
+        .cloud1::after {
+            content: '';
+            position: absolute;
+            background: white;
+            width: 60px;
+            height: 50px;
+            border-radius: 50%;
+            top: -20px;
+            right: 10px;
+        }
+
+        .cloud2 {
+            width: 80px;
+            height: 35px;
+            top: 150px;
+            right: 15%;
+            animation: float-cloud 25s ease-in-out infinite reverse;
+        }
+
+        .cloud2::before {
+            content: '';
+            position: absolute;
+            background: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            top: -20px;
+            left: 10px;
+        }
+
+        .cloud2::after {
+            content: '';
+            position: absolute;
+            background: white;
+            width: 50px;
+            height: 40px;
+            border-radius: 50%;
+            top: -18px;
+            right: 10px;
+        }
+
+        @keyframes float-cloud {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            50% { transform: translateX(30px) translateY(-10px); }
+        }
+
+        .house {
+            position: absolute;
+            bottom: 200px;
+            left: 15%;
+            width: 140px;
+            height: 110px;
+            background: #1e3a5f;
+            border: 3px solid #0f2847;
+            border-radius: 5px;
+        }
+
+        .roof {
+            position: absolute;
+            top: -55px;
+            left: -15px;
+            width: 0;
+            height: 0;
+            border-left: 85px solid transparent;
+            border-right: 85px solid transparent;
+            border-bottom: 65px solid #8b1538;
+            filter: drop-shadow(0 0 10px rgba(139,21,56,0.3));
+        }
+
+        .chimney {
+            position: absolute;
+            top: -20px;
+            right: 30px;
+            width: 20px;
+            height: 30px;
+            background: #8b1538;
+            border: 2px solid #6b0f2a;
+            border-radius: 2px;
+        }
+
+        .chimney::after {
+            content: '💨';
+            position: absolute;
+            top: -15px;
+            left: -5px;
+            font-size: 1.2em;
+            animation: smoke 2s ease-in-out infinite;
+        }
+
+        @keyframes smoke {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
+        }
+
+        .door {
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            width: 40px;
+            height: 60px;
+            background: #5a6a75;
+            border: 2px solid #3d4f5c;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .door::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            right: 8px;
+            width: 5px;
+            height: 5px;
+            background: #f39c12;
+            border-radius: 50%;
+        }
+
+        .window {
+            position: absolute;
+            top: 25px;
+            width: 30px;
+            height: 30px;
+            background: #ffd700;
+            border: 3px solid #0f2847;
+            border-radius: 3px;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), inset 0 0 10px rgba(255,235,150,0.8);
+        }
+
+        .window::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #3d4f5c;
+            transform: translateY(-50%);
+        }
+
+        .window::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: #3d4f5c;
+            transform: translateX(-50%);
+        }
+
+        .window:first-of-type { left: 20px; }
+        .window:last-of-type { right: 20px; }
+
+        .tree {
+            position: absolute;
+            bottom: 200px;
+            right: 20%;
+            width: 0;
+            height: 0;
+        }
+
+        .tree-part {
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-bottom: 90px solid #1e5631;
+            position: relative;
+            margin-bottom: -25px;
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
+        }
+
+        .tree-part:nth-child(2) {
+            border-bottom-color: #2d6a3f;
+            transform: scale(0.85);
+        }
+
+        .tree-part:nth-child(3) {
+            border-bottom-color: #2d6a3f;
+            transform: scale(0.7);
+        }
+
+        .tree-part:nth-child(4) {
+            border-bottom-color: #3d7c4d;
+            transform: scale(0.5);
+        }
+
+        /* Schnee auf Baum */
+        .tree-part::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+        .trunk {
+            width: 25px;
+            height: 35px;
+            background: #6f4e37;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -35px;
+            border: 2px solid #5a3e2f;
+        }
+
+        .star {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffd700;
+            font-size: 2em;
+            text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.7; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Schneekugeln als Türchen */
+        .snow-globes {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 30px;
+            padding: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            z-index: 5;
+        }
+
+        .snow-globe {
+            position: relative;
+            width: 100px;
+            height: 120px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .snow-globe:hover {
+            transform: scale(1.1);
+        }
+
+        .globe {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(230,240,255,0.7));
+            border-radius: 50%;
+            border: 4px solid #c9b037;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset -5px -5px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .globe::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 15%;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(255,255,255,0.6), transparent);
+            border-radius: 50%;
+        }
+
+        .day-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #8b1538;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.9), 0 0 10px rgba(255,215,0,0.3);
+            z-index: 2;
+        }
+
+        .base {
+            width: 100px;
+            height: 20px;
+            background: linear-gradient(to bottom, #6b4423, #4a2f1a);
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+
+        .locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .locked .globe {
+            background: radial-gradient(circle at 30% 30%, rgba(150,150,150,0.8), rgba(100,100,100,0.6));
+            border-color: #7a7a7a;
+        }
+
+        .unlocked .globe {
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.4), 
+                           inset -5px -5px 20px rgba(0,0,0,0.15), 
+                           0 0 20px rgba(255,215,0,0.4); 
+            }
+            50% { 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.4), 
+                           inset -5px -5px 20px rgba(0,0,0,0.15), 
+                           0 0 35px rgba(255,215,0,0.7); 
+            }
+        }
+
+        .active .globe {
+            box-shadow: 0 10px 30px rgba(139,21,56,0.6), inset -5px -5px 20px rgba(0,0,0,0.15);
+            border-color: #8b1538;
+        }
+
+        /* Audio Player */
+        .player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, #1a2347, #2d4875);
+            padding: 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
+            z-index: 100;
+            border-top: 3px solid #c9b037;
+        }
+
+        .player-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .player-info {
+            text-align: center;
+            color: #e8d5c4;
+            font-size: 1.2em;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .play-button {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b1538, #a81d47);
+            border: 2px solid #ffd700;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(139,21,56,0.5), 0 0 10px rgba(255,215,0,0.3);
+        }
+
+        .play-button:hover {
+            background: linear-gradient(135deg, #a81d47, #c92554);
+            transform: scale(1.1);
+            box-shadow: 0 7px 20px rgba(139,21,56,0.7), 0 0 15px rgba(255,215,0,0.5);
+        }
+
+        .progress-container {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(201,176,55,0.3);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #c9b037, #ffd700);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        .time-display {
+            color: #e8d5c4;
+            font-size: 0.9em;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        /* Schneemann */
+        .snowman {
+            position: absolute;
+            bottom: 200px;
+            left: 35%;
+            width: 60px;
+            height: 120px;
+        }
+
+        .snowman-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #e8f4f8;
+        }
+
+        .snowman-middle {
+            position: absolute;
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #e8f4f8;
+        }
+
+        .snowman-head {
+            position: absolute;
+            bottom: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #e8f4f8;
+        }
+
+        .snowman-face::before,
+        .snowman-face::after {
+            content: '•';
+            position: absolute;
+            top: 10px;
+            font-size: 8px;
+            color: #2c3e50;
+        }
+
+        .snowman-face::before { left: 8px; }
+        .snowman-face::after { right: 8px; }
+
+        .snowman-nose {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 12px solid #e67e22;
+        }
+
+        .snowman-scarf {
+            position: absolute;
+            bottom: 42px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 55px;
+            height: 8px;
+            background: #8b1538;
+            border-radius: 2px;
+        }
+
+        .snowman-scarf::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 0;
+            width: 15px;
+            height: 20px;
+            background: #8b1538;
+            border-radius: 0 0 3px 3px;
+        }
+
+        .snowman-buttons {
+            position: absolute;
+            bottom: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .snowman-buttons::before,
+        .snowman-buttons::after {
+            content: '•';
+            position: absolute;
+            font-size: 10px;
+            color: #2c3e50;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .snowman-buttons::before { top: 5px; }
+        .snowman-buttons::after { top: 15px; }
+
+        /* Tannen im Hintergrund */
+        .background-tree {
+            position: absolute;
+            bottom: 200px;
+            width: 0;
+            height: 0;
+        }
+
+        .bg-tree1 { left: 5%; transform: scale(0.7); }
+        .bg-tree2 { left: 8%; transform: scale(0.5); }
+        .bg-tree3 { right: 10%; transform: scale(0.6); }
+        .bg-tree4 { right: 5%; transform: scale(0.8); }
+
+        .background-tree .tree-part {
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 60px solid #1e5631;
+            margin-bottom: -15px;
+            opacity: 0.6;
+        }
+
+        .background-tree .tree-part:nth-child(2) {
+            border-bottom-color: #1e5631;
+            transform: scale(0.85);
+        }
+
+        .background-tree .tree-part:nth-child(3) {
+            border-bottom-color: #2d6a3f;
+            transform: scale(0.7);
+        }
+
+        .background-tree .trunk {
+            width: 15px;
+            height: 25px;
+            bottom: -25px;
+        }
+
+        /* Weihnachtsmann */
+        .santa {
+            position: absolute;
+            bottom: 210px;
+            left: 5%;
+            font-size: 3em;
+            animation: wave 3s ease-in-out infinite;
+            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        /* Engelchen */
+        .angel {
+            position: absolute;
+            font-size: 2em;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .angel1 {
+            top: 120px;
+            right: 25%;
+            animation-delay: 0s;
+        }
+
+        .angel2 {
+            top: 180px;
+            left: 20%;
+            animation-delay: 1s;
+        }
+
+        .angel3 {
+            top: 140px;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        /* Rentiere */
+        .reindeer {
+            position: absolute;
+            font-size: 2.5em;
+            animation: hop 3s ease-in-out infinite;
+            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
+        }
+
+        .reindeer1 {
+            bottom: 210px;
+            right: 40%;
+            animation-delay: 0s;
+        }
+
+        .reindeer2 {
+            bottom: 220px;
+            right: 8%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes hop {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Schneeflocken -->
+    <script>
+        for(let i = 0; i < 50; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.innerHTML = '❄';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            snowflake.style.animationDelay = Math.random() * 5 + 's';
+            snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            snowflake.style.opacity = Math.random();
+            document.body.appendChild(snowflake);
+        }
+    </script>
+
+    <div class="header">
+        <h1>🎄 Céline's Adventskalender 🎄</h1>
+        <p>Öffne jeden Tag ein neues Türchen</p>
+    </div>
+
+    <div class="landscape">
+        <!-- Wolken -->
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+
+        <!-- Hintergrund-Tannen -->
+        <div class="background-tree bg-tree1">
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="trunk"></div>
+        </div>
+        <div class="background-tree bg-tree2">
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="trunk"></div>
+        </div>
+        <div class="background-tree bg-tree3">
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="trunk"></div>
+        </div>
+        <div class="background-tree bg-tree4">
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="trunk"></div>
+        </div>
+
+        <!-- Weihnachtsmann -->
+        <div class="santa">🎅</div>
+
+        <!-- Engelchen -->
+        <div class="angel angel1">👼</div>
+        <div class="angel angel2">👼</div>
+        <div class="angel angel3">👼</div>
+
+        <!-- Haus -->
+        <div class="house">
+            <div class="chimney"></div>
+            <div class="roof"></div>
+            <div class="door"></div>
+            <div class="window"></div>
+            <div class="window"></div>
+        </div>
+
+        <!-- Schneemann -->
+        <div class="snowman">
+            <div class="snowman-bottom"></div>
+            <div class="snowman-middle"></div>
+            <div class="snowman-head snowman-face">
+                <div class="snowman-nose"></div>
+            </div>
+            <div class="snowman-scarf"></div>
+            <div class="snowman-buttons"></div>
+        </div>
+
+        <!-- Rentiere -->
+        <div class="reindeer reindeer1">🦌</div>
+        <div class="reindeer reindeer2">🦌</div>
+
+        <!-- Weihnachtsbaum -->
+        <div class="tree">
+            <div class="star">⭐</div>
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="tree-part"></div>
+            <div class="trunk"></div>
+        </div>
+
+        <!-- Schneekugeln (Türchen) -->
+        <div class="snow-globes" id="snowGlobes"></div>
+
+        <!-- Boden -->
+        <div class="ground"></div>
+    </div>
+
+    <!-- Audio Player -->
+    <div class="player">
+        <div class="player-content">
+            <div class="player-info" id="playerInfo">Wähle ein Türchen aus...</div>
+            <div class="player-controls">
+                <button class="play-button" id="playButton" disabled>▶</button>
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playButton = document.getElementById('playButton');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const playerInfo = document.getElementById('playerInfo');
+        const snowGlobesContainer = document.getElementById('snowGlobes');
+
+        let currentDay = 0;
+        let isPlaying = false;
+
+        // Aktuelles Datum für Freischaltung
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentDate = today.getDate();
+        
+        // Dezember = 11 (0-basiert)
+        const isDecember = currentMonth === 11;
+
+        // Erstelle 24 Schneekugeln
+        for(let i = 1; i <= 24; i++) {
+            const globe = document.createElement('div');
+            globe.className = 'snow-globe';
+            
+            // Prüfe ob Türchen freigeschaltet ist
+            const isUnlocked = isDecember && currentDate >= i;
+            
+            if(!isUnlocked) {
+                globe.classList.add('locked');
+            } else {
+                globe.classList.add('unlocked');
+            }
+            
+            globe.innerHTML = `
+                <div class="globe">
+                    <div class="day-number">${i}</div>
+                </div>
+                <div class="base"></div>
+            `;
+            
+            globe.addEventListener('click', () => {
+                if(isUnlocked) {
+                    playDay(i);
+                }
+            });
+            
+            snowGlobesContainer.appendChild(globe);
+        }
+
+        function playDay(day) {
+            // Entferne vorherige Active-Klasse
+            document.querySelectorAll('.snow-globe').forEach(g => g.classList.remove('active'));
+            
+            // Markiere aktuelle Kugel
+            document.querySelectorAll('.snow-globe')[day - 1].classList.add('active');
+            
+            currentDay = day;
+            
+            // Versuche MP3 zu laden (Format: day1.mp3, day2.mp3, etc.)
+            const audioSrc = `day${day}.mp3`;
+            audioPlayer.src = audioSrc;
+            
+            playerInfo.textContent = `Tag ${day} - Dezember`;
+            playButton.disabled = false;
+            
+            // Automatisch abspielen
+            audioPlayer.play().then(() => {
+                isPlaying = true;
+                playButton.textContent = '⏸';
+            }).catch(err => {
+                console.error('Fehler beim Abspielen:', err);
+                playerInfo.textContent = `Tag ${day} - Datei nicht gefunden`;
+            });
+        }
+
+        playButton.addEventListener('click', () => {
+            if(isPlaying) {
+                audioPlayer.pause();
+                playButton.textContent = '▶';
+                isPlaying = false;
+            } else {
+                audioPlayer.play();
+                playButton.textContent = '⏸';
+                isPlaying = true;
+            }
+        });
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBar.style.width = progress + '%';
+            
+            const currentTime = formatTime(audioPlayer.currentTime);
+            const duration = formatTime(audioPlayer.duration);
+            timeDisplay.textContent = `${currentTime} / ${duration}`;
+        });
+
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        });
+
+        // Wenn Track zu Ende, versuche nächsten Tag zu spielen
+        audioPlayer.addEventListener('ended', () => {
+            playButton.textContent = '▶';
+            isPlaying = false;
+            
+            // Versuche nächsten Tag
+            if(currentDay < 24) {
+                const nextDay = currentDay + 1;
+                const isNextUnlocked = isDecember && currentDate >= nextDay;
+                
+                if(isNextUnlocked) {
+                    setTimeout(() => playDay(nextDay), 1000);
+                } else {
+                    playerInfo.textContent = `Tag ${nextDay} ist noch nicht freigeschaltet`;
+                }
+            }
+        });
+
+        function formatTime(seconds) {
+            if(isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+    </script>
+</body>
+</html>
